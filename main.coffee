@@ -1,0 +1,5 @@
+@admin = require("admin")
+@console = require("console")
+@interop = require("interop")
+@game = require("game")
+@clients = require("clients")
