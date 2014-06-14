@@ -30,13 +30,13 @@ class Group
 		if hasOverride then rule.value else null
 ###
 
-Object.defineProperty Admin::, "immunity",
+Object.defineProperty Group::, "immunity",
 	get: ->
 		natives.GetAdmGroupImmunityLevel(@id)
 	set: (value) ->
 		natives.SetAdmGroupImmunityLevel(@id, value)
 
-Object.defineProperty Admin::, "immuneFromGroups",
+Object.defineProperty Group::, "immuneFromGroups",
 	get: ->
 		gicount = natives.GetAdmGroupImmuneCount(@id)
 		new Group(natives.GetAdmGroupImmuneFrom(@id,i)) for i in [0...gicount]
