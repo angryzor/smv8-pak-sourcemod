@@ -45,7 +45,7 @@ natives.declare("IsClientTimingOut")
 natives.declare("GetClientTime",types.float)
 natives.declare("GetClientLatency",types.float)
 natives.declare("GetClientAvgLatency",types.float)
-natives.declare("GetClientAvgLoss",types.float),types.float
+natives.declare("GetClientAvgLoss",types.float)
 natives.declare("GetClientAvgChoke",types.float)
 natives.declare("GetClientAvgData",types.float)
 natives.declare("GetClientAvgPackets",types.float)
@@ -211,7 +211,7 @@ Object.defineProperty Client::, "adminId",
 	get: ->
 		natives.GetUserAdmin(@id)
 
-interop.flags.defineFlagsProperty Client::, "flags", admModule.flags.access, [],
+interop.flags.defineFlagsProperty Client::, "flags", adminModule.flags.access, [],
 	->
 		natives.GetUserFlagBits(@id)
 	,

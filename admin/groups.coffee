@@ -1,3 +1,4 @@
+interop = require("sourcemod/interop")
 flags = require("flags")
 
 natives.declare("CreateAdmGroup")
