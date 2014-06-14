@@ -13,21 +13,21 @@ class Team
 	settings:
 		maxTeamNameLength: 40
 
-Object.defineProperty(Team::,"name",
+Object.defineProperty Team::, "name",
 	get: ->
 		name = ref("",@settings.maxTeamNameLength)
 		natives.GetTeamName(@id, name, name.size)
-		name.value)
+		name.value
 
 module = @
 
 @findById = (id) ->
 	new Team(id)
 
-Object.defineProperty(@,"count",
+Object.defineProperty @, "count",
 	get: ->
-		natives.GetTeamCount())
+		natives.GetTeamCount()
 
-Object.defineProperty(@,"all",
+Object.defineProperty @, "all",
 	get: ->
-		new Team(id) for id in [0...4])
+		new Team(id) for id in [0...4]

@@ -5,6 +5,8 @@ log = require("sourcemod/log")
 clients = require("sourcemod/clients")
 
 natives.declare("ReplyToCommand")
+natives.declare("GetCmdReplySource")
+natives.declare("SetCmdReplySource")
 natives.declare("RegServerCmd")
 natives.declare("RegConsoleCmd")
 natives.declare("RegAdminCmd")
@@ -24,6 +26,10 @@ natives.declare("RemoveServerTag")
 natives.declare("AddCommandListener")
 natives.declare("RemoveCommandListener")
 
+@enums =
+	console: 0
+	chat:    1
+
 class ConCommand
 	conCmdCallbacks = []
 
@@ -38,9 +44,8 @@ class ConCommand
 		{@description,access,group} = options
 		@description = "" unless @description?
 
-		self = @
-		wrappedcb = (client, args) ->
-			callback(new ConCommandCall(self, clients.findById(client), args))
+		wrappedcb = (client, args) =>
+			callback(new ConCommandCall(@, clients.findById(client), args))
 		conCmdCallbacks.push(wrappedcb)
 
 		if access?
@@ -55,9 +60,8 @@ class ConCommand
 		{@description} = options
 		@description = "" unless @description?
 
-		self = @
-		wrappedcb = (args) ->
-			callback(new ConCommandCall(self, null, args))
+		wrappedcb = (args) =>
+			callback(new ConCommandCall(@, null, args))
 		conCmdCallbacks.push(wrappedcb)
 
 		natives.RegServerCmd(@name, wrappedcb, @description, flags)
@@ -77,9 +81,8 @@ class ConCommand
 		natives.CheckAccess(adminid, @name, flags, override_only)
 
 	addListener: (callback) ->
-		self = @
-		wrappedcb = (client,command,args) ->
-			callback(new ConCommandCall(self, clients.findById(client), args))
+		wrappedcb = (client,command,args) =>
+			callback(new ConCommandCall(@, clients.findById(client), args))
 		@cmdListeners.push({cb:callback, wcb:wrappedcb})
 
 		natives.AddCommandListener(wrappedcb)
@@ -121,7 +124,14 @@ class ConCommandCall
 @link = (name) ->
 	new ConCommand(name)
 
-Object.defineProperty(@, "sourcemod",
+Object.defineProperty @, "replySource",
+	set: (src) ->
+		natives.SetCmdReplySource(src)
+
+	get: ->
+		natives.GetCmdReplySource()
+
+Object.defineProperty @, "sourcemod",
 	get: ->
 		i = natives.GetCommandIterator()
 
@@ -134,9 +144,9 @@ Object.defineProperty(@, "sourcemod",
 
 		natives.CloseHandle(i)
 
-		cmds)
+		cmds
 
-Object.defineProperty(@, "all",
+Object.defineProperty @, "all",
 	get: ->
 		name = ref("",100)
 		eflags = ref(0)
@@ -155,4 +165,4 @@ Object.defineProperty(@, "all",
 
 		natives.CloseHandle(i)
 
-		cmds)
+		cmds
